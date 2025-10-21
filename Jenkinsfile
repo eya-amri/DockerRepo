@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     tools {
-        maven 'M2_HOME'
+        maven 'M2_HOME' 
     }
 
     stages {
+
         stage('Checkout code') {
             steps {
                 git branch: 'master', url: 'https://github.com/eya-amri/CountryRepo.git'
@@ -14,13 +15,18 @@ pipeline {
 
         stage('Compile code') {
             steps {
-                sh 'mvn clean compile'
+                sh 'mvn compile'
             }
         }
 
         stage('Test code') {
             steps {
                 sh 'mvn test'
+            }
+            post {
+                success {
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                }
             }
         }
 
@@ -29,20 +35,5 @@ pipeline {
                 sh 'mvn package'
             }
         }
-        stage('Package code') {
-            steps
-            {
-                sh 'mvn package '
-            }
-        }
-       
-
-    }
-
-    post {
-        always {
-            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
-        }
     }
 }
-
