@@ -15,7 +15,7 @@ public class CountryserviceApplication extends SpringBootServletInitializer {
 	// Cette méthode est utilisée par Tomcat externe pour démarrer l'application
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(CountryServiceApplication.class);
+        return builder.sources(CountryserviceApplication.class);
     }
 
 }
