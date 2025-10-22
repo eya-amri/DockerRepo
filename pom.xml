@@ -106,8 +106,30 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<!-- Maven WAR Plugin pour générer le .war -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${maven.war.plugin.version}</version>
+				<configuration>
+				<failOnMissingWebXml>false</failOnMissingWebXml>
+				<warName>${project.artifactId}</warName>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-	
+	<!-- Déploiement vers Nexus -->
+		<distributionManagement>
+		<repository>
+		<id>nexus-releases</id>
+		<name>Nexus Release Repository</name>
+		<url>http://172.27.132.151:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+		<id>nexus-snapshots</id>
+		<name>Nexus Snapshot Repository</name>
+		<url>http://172.27.132.151:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
