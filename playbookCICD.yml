@@ -63,5 +63,6 @@
         namespace: jenkins # Assurez-vous que c'est le bon namespace
         src: servicemonitor.yaml
         kubeconfig: config
+      ignore_errors: yes
 
 
