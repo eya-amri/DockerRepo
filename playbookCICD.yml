@@ -5,31 +5,28 @@
 
   vars: 
     image_name: my-compte-service
-    image_tag: "2"
+    # image_tag sera surchargé par Jenkins (-e "image_tag=...")
+    image_tag: "latest" 
     dockerfile_path: './'
     docker_registry_username: eyaamri
     docker_registry_password: evyAa10123
   vars_files:
     - vault.yml
 
-
   tasks:
     - name: Log in to Docker Hub
       community.general.docker_login:
         username: "{{docker_registry_username}}"
-        password:  "{{docker_registry_password}}"
-            
-
+        password: "{{docker_registry_password}}"
 
     - name: Build Docker image
       docker_image:
         build:
-          path : "{{dockerfile_path}}"
+          path: "{{dockerfile_path}}"
         name: "{{docker_registry_username}}/{{image_name}}"
         tag: "{{ image_tag }}"
         source: build
         state: present
-        
 
     - name: Push the Docker image to Docker Hub
       docker_image:
@@ -38,18 +35,25 @@
         push: yes
         source: local
 
-    - name: Pull Docker image (optional, for verification or on target nodes)
-      docker_image:
-        name: "{{ docker_registry_username }}/{{ image_name }}"
-        tag: "{{image_tag}}"
-        source: pull
+    # --- DÉPLOIEMENT KUBERNETES ---
+
+    # Assurons-nous que le namespace existe
+    - name: Create namespace if not exists
+      kubernetes.core.k8s:
+        name: jenkins
+        api_version: v1
+        kind: Namespace
+        state: present
+        kubeconfig: config
 
     - name: Apply Kubernetes Deployment
       kubernetes.core.k8s:
         state: present
         namespace: jenkins
         src: deployment.yaml
-        kubeconfig: config # Path to your kubeconfig file
+        kubeconfig: config
+        # Force le redémarrage pour prendre la nouvelle image si le tag est identique (ex: latest)
+        force: yes 
 
     - name: Apply Kubernetes Service
       kubernetes.core.k8s:
@@ -57,12 +61,11 @@
         namespace: jenkins
         src: service.yaml
         kubeconfig: config
+
     - name: Apply Prometheus ServiceMonitor
       kubernetes.core.k8s:
         state: present
-        namespace: jenkins # Assurez-vous que c'est le bon namespace
+        namespace: jenkins
         src: servicemonitor.yaml
         kubeconfig: config
-      ignore_errors: yes
-
-
+      # J'ai retiré ignore_errors: yes car Prometheus est installé maintenant !
