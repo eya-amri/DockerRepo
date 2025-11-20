@@ -4,7 +4,7 @@ metadata:
   name: my-country-service
   
 spec:
-  type: nodeport
+  type: NodePort
   selector:
     app: country-service
   ports:
@@ -13,5 +13,6 @@ spec:
       targetPort: 8080 
       NodePort: 30007
       protocol: TCP
+
 
 
