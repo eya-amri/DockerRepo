@@ -57,4 +57,11 @@
         namespace: jenkins
         src: service.yaml
         kubeconfig: config
+    - name: Apply Prometheus ServiceMonitor
+      kubernetes.core.k8s:
+        state: present
+        namespace: jenkins # Assurez-vous que c'est le bon namespace
+        src: servicemonitor.yaml
+        kubeconfig: config
+
 
