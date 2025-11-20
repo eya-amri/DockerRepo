@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: country-service-monitor
+  labels:
+    release: prometheus  # Ce label permet à l'opérateur Prometheus de découvrir ce fichier
+spec:
+  selector:
+    matchLabels:
+      app: country-service # Doit correspondre au label de votre service.yaml
+  endpoints:
+  - port: http           # Doit correspondre au 'name' dans service.yaml
+    path: /actuator/prometheus # Le chemin standard Spring Boot (à adapter si besoin)
+    interval: 15s
