@@ -12,8 +12,9 @@ spec:
     - name: http          # <--- AJOUT CRUCIAL : Nommer le port
       port: 8080
       targetPort: 8080 
-      nodePort: 30008
+      nodePort: 30015
       protocol: TCP
+
 
 
 
