@@ -9,7 +9,7 @@
     image_tag: "latest" 
     dockerfile_path: './'
     docker_registry_username: eyaamri
-    docker_registry_password: evyAa10123
+    docker_registry_password: *************
   vars_files:
     - vault.yml
 
